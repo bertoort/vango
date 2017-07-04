@@ -1,0 +1,55 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "U5tK4cmCTiqcLbCFD1xypdh3v8k=",
+			"path": "github.com/fogleman/gg",
+			"revision": "ee8994ff90057955c428a5a949da5d064bf3ce6b",
+			"revisionTime": "2017-05-04T01:14:43Z"
+		},
+		{
+			"checksumSHA1": "aJ/kX/eCUlrCJBZ26Hwh/RXzAIw=",
+			"path": "github.com/golang/freetype/raster",
+			"revision": "e2365dfdc4a05e4b8299a783240d4a7d5a65d4e4",
+			"revisionTime": "2017-06-09T00:35:04Z"
+		},
+		{
+			"checksumSHA1": "I3u9Uh9thka1gsgch6QEiPkaAr0=",
+			"path": "github.com/golang/freetype/truetype",
+			"revision": "e2365dfdc4a05e4b8299a783240d4a7d5a65d4e4",
+			"revisionTime": "2017-06-09T00:35:04Z"
+		},
+		{
+			"checksumSHA1": "WZqFyWo6r8KZodsU0doRvel37F0=",
+			"path": "golang.org/x/image/draw",
+			"revision": "3210c0296b49a552ad9668ede9c61008df821b94",
+			"revisionTime": "2017-04-17T04:12:48Z"
+		},
+		{
+			"checksumSHA1": "+U1IB5N4LDS74y4fXjARb4/S4IE=",
+			"path": "golang.org/x/image/font",
+			"revision": "3210c0296b49a552ad9668ede9c61008df821b94",
+			"revisionTime": "2017-04-17T04:12:48Z"
+		},
+		{
+			"checksumSHA1": "KsSSl5U1ZkRocio4flF+3PlJUBM=",
+			"path": "golang.org/x/image/font/basicfont",
+			"revision": "3210c0296b49a552ad9668ede9c61008df821b94",
+			"revisionTime": "2017-04-17T04:12:48Z"
+		},
+		{
+			"checksumSHA1": "o7VkCGBiKM5HXzVzrIci1YDlpvc=",
+			"path": "golang.org/x/image/math/f64",
+			"revision": "3210c0296b49a552ad9668ede9c61008df821b94",
+			"revisionTime": "2017-04-17T04:12:48Z"
+		},
+		{
+			"checksumSHA1": "euzvwlMLxyD0hwc+raoVsDLv6j4=",
+			"path": "golang.org/x/image/math/fixed",
+			"revision": "3210c0296b49a552ad9668ede9c61008df821b94",
+			"revisionTime": "2017-04-17T04:12:48Z"
+		}
+	],
+	"rootPath": "github.com/berto/vango"
+}
