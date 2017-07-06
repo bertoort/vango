@@ -36,5 +36,6 @@ func tweet(response http.ResponseWriter, request *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	http.Redirect(response, request, "/", http.StatusTemporaryRedirect)
+	url := "https://twitter.com/Bertoort"
+	http.Redirect(response, request, url, http.StatusTemporaryRedirect)
 }
