@@ -1,14 +1,19 @@
 package main
 
-import "log"
+import (
+	"log"
+	"net/http"
+	"os"
+)
 
 func main() {
-	colors := 20
-	percentFill := .50
-	hex := newHexagon(1000, 1000, 20, 20)
-	palette := newPalette(colors)
-	hex.fill(palette, percentFill)
-	err := hex.post()
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "3000"
+	}
+	h := http.NewServeMux()
+	h.HandleFunc("/", index)
+	err := http.ListenAndServe(":"+port, h)
 	if err != nil {
 		log.Fatal(err)
 	}
