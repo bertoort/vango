@@ -13,6 +13,7 @@ func main() {
 	}
 	h := http.NewServeMux()
 	h.HandleFunc("/", index)
+	h.HandleFunc("/tweet", tweet)
 	err := http.ListenAndServe(":"+port, h)
 	if err != nil {
 		log.Fatal(err)

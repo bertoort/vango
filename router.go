@@ -13,12 +13,20 @@ const indexTemplate = `<html>
 <body>
 	<img width="300" height="300" src="https://raw.githubusercontent.com/berto/vango/master/hexagon.png">
 	<br>
+	<form action="/tweet">
+		<button type="submit">Post New Image</button>
+	</form>
+	<br>
 	<a href="https://twitter.com/Bertoort">Twitter</a>
 	<a href="https://github.com/berto/vango">Code</a>
 </body>
 </html>`
 
 func index(response http.ResponseWriter, request *http.Request) {
+	fmt.Fprintf(response, "%s", indexTemplate)
+}
+
+func tweet(response http.ResponseWriter, request *http.Request) {
 	colors := 20
 	percentFill := .50
 	hex := newHexagon(1000, 1000, 20, 20)
@@ -28,5 +36,5 @@ func index(response http.ResponseWriter, request *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Fprintf(response, "%s", indexTemplate)
+	http.Redirect(response, request, "/", http.StatusTemporaryRedirect)
 }

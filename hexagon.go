@@ -1,17 +1,10 @@
 package main
 
 import (
-	"bytes"
-	"encoding/base64"
-	"fmt"
-	"image/png"
 	"math/rand"
-	"os"
 	"time"
 
-	"github.com/ChimeraCoder/anaconda"
 	"github.com/fogleman/gg"
-	"github.com/subosito/gotenv"
 )
 
 type Hexagon struct {
@@ -85,20 +78,13 @@ func (h *Hexagon) write(path string) {
 }
 
 func (h *Hexagon) post() error {
-	gotenv.Load()
-	anaconda.SetConsumerKey(os.Getenv("COSTUMER_KEY"))
-	anaconda.SetConsumerSecret(os.Getenv("COSTUMER_SECRET"))
-	api := anaconda.NewTwitterApi(os.Getenv("ACCESS_TOKEN"), os.Getenv("ACCESS_TOKEN_SECRET"))
-	buf := new(bytes.Buffer)
-	err := png.Encode(buf, h.board.Image())
+	media, err := postMedia(h.board.Image())
 	if err != nil {
 		return err
 	}
-	base64ImageString := base64.StdEncoding.EncodeToString(buf.Bytes())
-	media, err := api.UploadMedia(base64ImageString)
+	err = tweetMedia(media)
 	if err != nil {
 		return err
 	}
-	fmt.Println(media)
 	return nil
 }
