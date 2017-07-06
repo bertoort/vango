@@ -4,4 +4,4 @@
 
 The goal is to generate a image and upload it to twitter once a day.
 
-![example](hexagon.go)
+![example](hexagon.png)
