@@ -21,6 +21,18 @@ func init() {
 	api = anaconda.NewTwitterApi(os.Getenv("ACCESS_TOKEN"), os.Getenv("ACCESS_TOKEN_SECRET"))
 }
 
+func tweetImage(newImage image.Image) error {
+	media, err := postMedia(newImage)
+	if err != nil {
+		return err
+	}
+	err = tweetMedia(media)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func postMedia(newImage image.Image) (media anaconda.Media, err error) {
 	buf := new(bytes.Buffer)
 	err = png.Encode(buf, newImage)

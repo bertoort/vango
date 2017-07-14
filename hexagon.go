@@ -1,6 +1,7 @@
 package main
 
 import (
+	"math"
 	"math/rand"
 	"time"
 
@@ -11,41 +12,63 @@ type Hexagon struct {
 	board    *gg.Context
 	currentX int
 	currentY int
-	size     float64
-	rows     float64
-	columns  float64
+	width    float64
+	height   float64
+	size     int
+	rows     int
 }
 
-func newHexagon(w, h int, r, c float64) Hexagon {
-	size := float64(w) / r
+func newHexagon(w, h, hexSizePer float64) Hexagon {
+	width, height := calculateDimensions(h, hexSizePer)
+	rowCount := (w - width) / width
+	rows := h / height * 1.25
+	size := calculateSize(rows, rowCount)
 	return Hexagon{
-		board:    gg.NewContext(w, h),
-		rows:     r,
-		columns:  c,
+		board:    gg.NewContext(int(w), int(h)),
+		rows:     int(rowCount),
+		width:    width,
+		height:   height,
 		size:     size,
 		currentX: 1,
 		currentY: 1,
 	}
 }
 
+func calculateDimensions(h, percentage float64) (float64, float64) {
+	height := h * percentage / 100
+	r := height / 2
+	width := math.Sqrt((r*r)-((r/2)*(r/2))) * 2
+	return width, height
+}
+
+func calculateSize(rows, rowCount float64) int {
+	formatRowCount := int(math.Floor(rowCount))
+	hexSkipped := int(rows / 2)
+	if int(rows)%2 != 0 {
+		hexSkipped++
+	}
+	return formatRowCount*int(rows) - hexSkipped
+}
+
 func (h *Hexagon) drawHexagon(c Color) {
 	sides := 6
-	rotation := 100.00
+	rotation := 100.0
 	shift := h.rowShift()
-	x := (float64(h.currentX) * h.size * .86) + shift
-	y := float64(h.currentY) * h.size * .75
-	h.board.DrawRegularPolygon(sides, x, y, h.size/2, rotation)
+	x := (float64(h.currentX) * h.width) + shift
+	y := float64(h.currentY) * h.height * .75
+	radius := h.height / 2
+	h.board.DrawRegularPolygon(sides, x, y, radius, rotation)
 	h.board.SetRGB(c.R, c.G, c.B)
 	h.board.Fill()
 	h.setNext(shift)
 }
 
 func (h *Hexagon) setNext(shift float64) {
-	edge := 1
-	if shift == 0 {
-		edge = 2
+	edge := 0
+	if shift != 0 {
+		edge = -1
 	}
-	if h.currentX == int(h.rows)+edge {
+	if h.currentX == h.rows+edge {
 		h.currentX = 1
 		h.currentY++
 	} else {
@@ -55,15 +78,15 @@ func (h *Hexagon) setNext(shift float64) {
 
 func (h *Hexagon) rowShift() (shift float64) {
 	if h.currentY%2 != 0 {
-		shift = h.size / 2.3
+		shift = h.width / 2
 	}
 	return
 }
 
 func (h *Hexagon) fill(palette Palette, percentFill float64) {
 	numOfColors := len(palette.colors)
-	for i := 0; i < 537; i++ {
-		random := rand.New(rand.NewSource(time.Now().UnixNano()))
+	random := rand.New(rand.NewSource(time.Now().UnixNano()))
+	for i := 0; i < h.size; i++ {
 		randNumber := random.Intn(numOfColors)
 		if randNumber <= int(float64(numOfColors)*percentFill) {
 			h.drawHexagon(palette.getColor(randNumber))
@@ -71,20 +94,4 @@ func (h *Hexagon) fill(palette Palette, percentFill float64) {
 			h.setNext(h.rowShift())
 		}
 	}
-}
-
-func (h *Hexagon) write(path string) {
-	h.board.SavePNG(path)
-}
-
-func (h *Hexagon) post() error {
-	media, err := postMedia(h.board.Image())
-	if err != nil {
-		return err
-	}
-	err = tweetMedia(media)
-	if err != nil {
-		return err
-	}
-	return nil
 }

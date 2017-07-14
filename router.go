@@ -29,10 +29,10 @@ func index(response http.ResponseWriter, request *http.Request) {
 func tweet(response http.ResponseWriter, request *http.Request) {
 	colors := 20
 	percentFill := .50
-	hex := newHexagon(1000, 1000, 20, 20)
+	hexagon := newHexagon(1000, 1000, 2)
 	palette := newPalette(colors)
-	hex.fill(palette, percentFill)
-	err := hex.post()
+	hexagon.fill(palette, percentFill)
+	err := tweetImage(hexagon.board.Image())
 	if err != nil {
 		log.Fatal(err)
 	}

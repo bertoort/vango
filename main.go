@@ -18,4 +18,18 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	err := tweetImage(hexagon.board.Image())
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func testHexagon(w, h, hexSizePer float64) {
+	colors := 20
+	backgroundFill := 1.0
+	path := "test.png"
+	hexagon := newHexagon(w, h, hexSizePer)
+	palette := newPalette(colors)
+	hexagon.fill(palette, backgroundFill)
+	hexagon.board.SavePNG(path)
 }
