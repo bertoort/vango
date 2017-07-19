@@ -1,6 +1,7 @@
 package main
 
 import (
+	"image"
 	"math"
 	"math/rand"
 	"time"
@@ -53,17 +54,16 @@ func calculateSize(rows, rowCount float64) int {
 func (h *Hexagon) drawHexagon(c Color) {
 	sides := 6
 	rotation := 100.0
-	shift := h.rowShift()
-	x := (float64(h.currentX) * h.width) + shift
-	y := float64(h.currentY) * h.height * .75
 	radius := h.height / 2
-	h.board.DrawRegularPolygon(sides, x, y, radius, rotation)
-	h.board.SetRGB(c.R, c.G, c.B)
+	h.board.DrawRegularPolygon(sides, h.getX(), h.getY(), radius, rotation)
+	r, g, b, a := c.values()
+	h.board.SetRGBA(float64(r), float64(g), float64(b), float64(a))
 	h.board.Fill()
-	h.setNext(shift)
+	h.setNext()
 }
 
-func (h *Hexagon) setNext(shift float64) {
+func (h *Hexagon) setNext() {
+	shift := h.rowShift()
 	edge := 0
 	if shift != 0 {
 		edge = -1
@@ -74,6 +74,15 @@ func (h *Hexagon) setNext(shift float64) {
 	} else {
 		h.currentX++
 	}
+}
+
+func (h *Hexagon) getX() float64 {
+	shift := h.rowShift()
+	return (float64(h.currentX) * h.width) + shift
+}
+
+func (h *Hexagon) getY() float64 {
+	return float64(h.currentY) * h.height * .75
 }
 
 func (h *Hexagon) rowShift() (shift float64) {
@@ -89,9 +98,20 @@ func (h *Hexagon) fill(palette Palette, percentFill float64) {
 	for i := 0; i < h.size; i++ {
 		randNumber := random.Intn(numOfColors)
 		if randNumber <= int(float64(numOfColors)*percentFill) {
-			h.drawHexagon(palette.getColor(randNumber))
+			h.drawHexagon(palette.getRGB(randNumber))
 		} else {
-			h.setNext(h.rowShift())
+			h.setNext()
 		}
+	}
+}
+
+func (h *Hexagon) draw(im image.Image) {
+	for i := 0; i < h.size; i++ {
+		x := int(h.getX() + h.width/2)
+		y := int(h.getY() + h.height/2)
+		color := im.At(x, y)
+		rt, gt, bt, at := color.RGBA()
+		r, g, b, a := convertRGBA255(rt, gt, bt, at)
+		h.drawHexagon(newRGBA(r, g, b, a))
 	}
 }

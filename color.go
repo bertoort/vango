@@ -7,28 +7,53 @@ import (
 	"github.com/lucasb-eyer/go-colorful"
 )
 
-type Color struct {
-	R, G, B float64
+type Color interface {
+	values() (int, int, int, int)
+}
+
+type RGB struct {
+	R, G, B int
+}
+
+type RGBA struct {
+	R, G, B, A int
+}
+
+func (r RGB) values() (int, int, int, int) {
+	return r.R, r.G, r.B, 1
+}
+
+func (r RGBA) values() (int, int, int, int) {
+	return r.R, r.G, r.B, r.A
 }
 
 type Palette struct {
 	colors []colorful.Color
 }
 
-func newColor(r, g, b float64) Color {
-	return Color{
+func newRGB(r, g, b int) RGB {
+	return RGB{
 		R: r,
 		G: g,
 		B: b,
 	}
 }
 
-func randomColor() Color {
+func newRGBA(r, g, b, a int) RGBA {
+	return RGBA{
+		R: r,
+		G: g,
+		B: b,
+		A: a,
+	}
+}
+
+func randomRGB() RGB {
 	random := rand.New(rand.NewSource(time.Now().UnixNano()))
-	return Color{
-		R: random.Float64(),
-		G: random.Float64(),
-		B: random.Float64(),
+	return RGB{
+		R: random.Int(),
+		G: random.Int(),
+		B: random.Int(),
 	}
 }
 
@@ -59,11 +84,25 @@ func randomRange() (base, limit float64) {
 	return
 }
 
-func (p *Palette) getColor(index int) Color {
+func convertRGBA255(r, g, b, a uint32) (int, int, int, int) {
+	fa := int(a/257) / 255
+	if a == 0xffff {
+		fa = 1
+	}
+	if a == 0 {
+		return 0, 0, 0, 100
+	}
+	r = (r * 0xffff) / a
+	g = (g * 0xffff) / a
+	b = (b * 0xffff) / a
+	return 255 - int(r/257), 255 - int(g/257), 255 - int(b/257), fa
+}
+
+func (p *Palette) getRGB(index int) RGB {
 	color := p.colors[index]
-	return Color{
-		R: color.R,
-		G: color.G,
-		B: color.B,
+	return RGB{
+		R: int(color.R * 255),
+		G: int(color.G * 255),
+		B: int(color.B * 255),
 	}
 }
